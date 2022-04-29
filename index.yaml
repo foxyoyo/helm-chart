@@ -1,0 +1,13 @@
+apiVersion: v1
+entries:
+  backburner:
+  - apiVersion: v1
+    appVersion: 0.0.1
+    created: "2022-04-29T10:45:50.321482+08:00"
+    description: Helm chart for ruby backburner workers
+    digest: 9a2e80ec8a5d1091f9bb82c5a06bf8677e4e25d7b85cd950430c4b0c651270b4
+    name: backburner
+    urls:
+    - https://github.com/foxyoyo/helm-chart/backburner-0.2.0.tgz
+    version: 0.2.0
+generated: "2022-04-29T10:45:50.321027+08:00"

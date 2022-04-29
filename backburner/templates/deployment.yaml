@@ -1,0 +1,88 @@
+{{ range .Values.workers }}
+{{ $resourceName := (ternary .name .queue (not (empty .name))) }}
+{{ $worker := merge . $.Values.global (dict "resourceName" $resourceName) }}
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ $.Values.name }}-{{ $resourceName }}
+  namespace: {{ $.Release.Namespace }}
+  labels:
+    app: {{ $.Values.name }}-{{ $resourceName }}
+spec:
+  strategy:
+  {{- if (default .standAlone false ) }}
+    type: Recreate
+  {{- else}}
+    rollingUpdate:
+      maxSurge: 25%
+      maxUnavailable: 25%
+    type: RollingUpdate
+  {{- end}}
+  selector:
+    matchLabels:
+      app: {{ $.Values.name }}-{{ $resourceName }}
+  template:
+    metadata:
+      labels:
+        app: {{ $.Values.name }}-{{ $resourceName }}
+    spec:
+      {{- if hasKey .Values "tolerations" }}
+      tolerations:
+        {{- toYaml .Values.tolerations | nindent 8 }}
+      {{- end}}
+      {{- if hasKey .Values "nodeSelector" }}
+      nodeSelector:
+        {{ .Values.nodeSelector.labelName }}: {{ .Values.nodeSelector.labelValue }} 
+      {{- end}}
+      {{- if hasKey .Values "affinity" }}
+      affinity:
+        {{- if hasKey .Values.affinity "nodeAffinity" }}
+        nodeAffinity: {{- toYaml .Values.affinity.nodeAffinity | nindent 10 }}
+        {{- end }}
+        {{- if hasKey .Values.affinity "podAffinity" }}
+        podAffinity: {{- toYaml .Values.affinity.podAffinity | nindent 10 }}
+        {{- end }}
+        podAntiAffinity:
+          {{- if hasKey .Values.affinity.podAntiAffinity "requiredDuringSchedulingIgnoredDuringExecution" }}
+          requiredDuringSchedulingIgnoredDuringExecution: {{- toYaml .Values.affinity.podAntiAffinity.requiredDuringSchedulingIgnoredDuringExecution | nindent 12 }}
+          {{- end }}
+          preferredDuringSchedulingIgnoredDuringExecution:
+          {{- if hasKey .Values.affinity.podAntiAffinity "preferredDuringSchedulingIgnoredDuringExecution" }}
+            {{- toYaml .Values.affinity.podAntiAffinity.preferredDuringSchedulingIgnoredDuringExecution | nindent 12 }}
+          {{- end }}
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - {{ .Values.name }}
+                topologyKey: failure-domain.beta.kubernetes.io/zone
+              weight: 100
+            - podAffinityTerm:
+                labelSelector:
+                  matchExpressions:
+                  - key: app
+                    operator: In
+                    values:
+                    - {{ .Values.name }}
+                topologyKey: kubernetes.io/hostname
+              weight: 99
+      {{- end }}
+      {{- if hasKey .Values "securityContextForPod" }}
+      securityContext: 
+        {{ toYaml .Values.securityContextForPod | nindent 8 }}        
+      {{- end}}
+      containers:
+      - {{ template "deployment.container" $worker }}
+      restartPolicy: Always
+      {{- if $.Values.serviceaccount}}
+      serviceAccountName: {{ $.Values.name }}-pod-service-account
+      {{- end }}
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "2"
+      terminationGracePeriodSeconds: 61
+---
+{{- end }}

@@ -1,0 +1,74 @@
+name: backburner-name
+
+global:
+  image:
+    repository: repository_name/image
+    tag: tag
+  serviceaccount:
+    annotations:
+      eks.amazonaws.com/role-arn: arn:aws:iam::*******:role/*********
+  envFromConfigmap:
+    - name: cm-env
+  envFromSecret:
+    - name: secret-env
+
+workers: []
+# - name: custom-jobs
+#   queue:
+#     - queueName: custom-jobs
+#       listener: 2
+#   resources:
+#     limits:
+#       cpu: "300m"
+#       memory: "500Mi"
+#     requests:
+#       cpu: "300m"
+#       memory: "500Mi"
+#   command:
+#     - sh
+#     - -c
+#   args:
+#     - my custom command;
+#   enableHPA: true
+#   hpav2:
+#     minReplicas: 1
+#     maxReplicas: 1
+#     Resource:
+#       - name: cpu
+#         percent: 70
+# - name: worker1
+#   queue:
+#     - queueName: user-import-notification0 # default listener: 2
+#     - queueName: user-import-notification1 # default listener: 2
+#   resources:
+#     limits:
+#       cpu: "2"
+#       memory: "16Gi"
+#     requests:
+#       cpu: "1"
+#       memory: "4Gi"
+# - name: worker2
+#   standAlone: true
+#   enableHPA: false # set enableHPA required when standAlone mode
+#   queue:
+#     - queueName: user-import-notification3
+#   resources:
+#     limits:
+#       cpu: "2"
+#       memory: "16Gi"
+#     requests:
+#       cpu: "1"
+#       memory: "4Gi"
+# - name: worker3
+#   queue:
+#     - queueName: user-import-notification4
+#       listener: 4
+#     - queueName: user-import-notification5
+#       listener: 5
+#   resources:
+#     limits:
+#       cpu: "2"
+#       memory: "16Gi"
+#     requests:
+#       cpu: "1"
+#       memory: "4Gi"
