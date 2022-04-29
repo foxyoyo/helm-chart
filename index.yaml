@@ -3,9 +3,9 @@ entries:
   backburner:
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2022-04-29T11:00:47.676136+08:00"
+    created: "2022-04-29T11:28:04.859383+08:00"
     description: Helm chart for ruby backburner workers
-    digest: 9a2e80ec8a5d1091f9bb82c5a06bf8677e4e25d7b85cd950430c4b0c651270b4
+    digest: 5ecb8490ba4d4484e494ff3d9dae14f396a2373046a1f1c6d6fc68d7345d015d
     name: backburner
     urls:
     - https://github.com/foxyoyo/helm-chart/backburner-0.2.0.tgz
@@ -13,11 +13,11 @@ entries:
   simple:
   - apiVersion: v1
     appVersion: 0.0.1
-    created: "2022-04-29T11:00:47.676673+08:00"
+    created: "2022-04-29T11:28:04.85994+08:00"
     description: Helm chart with simple deployment/service template
     digest: 8b932e6b82f6717e41c3030a3a46034644c58fa2c5fc538f1ae80888324a5bde
     name: simple
     urls:
     - https://github.com/foxyoyo/helm-chart/simple-0.5.1.tgz
     version: 0.5.1
-generated: "2022-04-29T11:00:47.675391+08:00"
+generated: "2022-04-29T11:28:04.858751+08:00"
